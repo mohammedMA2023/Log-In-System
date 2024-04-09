@@ -4,7 +4,7 @@ class DatabaseConnection {
     private $username;
     private $password;
     private $dbName;
-    private $conn;
+    public $conn;
 
     public function __construct($servername, $username, $password, $dbName) {
         $this->servername = $servername;
@@ -101,6 +101,7 @@ class UserAuthentication {
     }
 
     public function logout() {
+        session_start();
         session_unset();
         session_destroy();
         echo "User logged out\n";
@@ -133,9 +134,11 @@ $db->connect();
 $auth = new UserAuthentication($db);
 switch ($_POST['auth']){
     case "login":
+        echo "log in";
         $auth->login($_POST['userid'], $_POST['password']);
         break;
     case "reg":
+        echo "reg";
         $auth->register($_POST['userid'], $_POST['password'], $_POST['uname']);
         break;
     case "logout":
@@ -143,4 +146,7 @@ switch ($_POST['auth']){
         break;
 }
 $db->close();
+echo json_encode($_SESSION);
+header("location:index.php");
+exit();
 ?>
